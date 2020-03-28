@@ -1,1 +1,141 @@
+一、web应用的工作过程	
+	从客户端（浏览器）向WEB应用服务器发出请求
+	WEB服务器向客户端发回响应
+  通过http协议进行交互
+  
+二、WEB应用服务器
+   1.服务器的概念：是指通过网络对外提供服务的一台计算机，而安装了服务器软件的高性能计算机，通常称之为标准的服务器
+      与普通电脑的区别在于服务器拥有固定的IP，防火墙等
+      和U盘作用差不多，都是用来存储文件的，只是服务器存储的是我们做好的网站文件，包括任何东西
+   2.常见的WEB服务器软件
+      jetty   resin   WebLogic(收费)  WebSphere(收费)  Tomcat
+   3.Tomcat服务器
+      目录结构：
+        |-bin      服务器开启和关闭 
+        |-conf    全局配置文件
+        |-logs    运行日志
+        |-lib     全局jar
+        |-temp     使用过程中产生的临时文件
+        |-webapps   部署我们开发的web文件，每一个子目录都代表一个网站
+        |-work      JSP文件运行时翻译生成的.java文件
+        
+   4.访问tomcat的首页
+      http://服务器的ip：port（端口号）
+      如果是当前的
+      http://localhost:8989
+   5.tomcat应用的目录结构
+      |-webapps
+        |-myweb
+          |-WEB-INF
+            |-classes
+            |-lib
+            |-web.xml
+          |-image
+          |-html
+          |-css
+   6.访问某个资源
+      http://ip或者localhost:post/项目名/资源路径
+      http://localhost:8989/myweb/time
+      
+三、网络应用体系结构
+  1.C/S(client/server)
+    基于客户端软件  和   服务端的模式
+    优点：图形化效果好，视觉效果好
+    缺点：服务器一旦升级，所有的客户端软件都需要升级
+    （游戏，app等）
+  2.B/S(Browser/server)
+     基于浏览器和服务器的模式
+     优点：只需要具备一个浏览器即可，服务端升级，不影响用户的使用
+     缺点：图形化效果不好
+     （普通的网站）
+四、基于B/S结构的WEB应用
+  1.静态WEB应用  htm,html,shtml     （纯粹的前端，根据用户的需求找到相应的项目，进而找到相应的静态资源）
+    不支持对数据库的访问
+    随着需求的增加，应用内部的html网页会大量增长。维护困难
+    只有一张html页面，不能根据用户的需求，动态展示结果
+（普通的网页,内容是实实在在的保存在网页的服务器上的，不管有没有人看，都在）
+    
+    
 
+  2.动态WEB应用 （地址内有“？”）                  
+    支持数据库的访问，大大降低网站维护工作量
+    可以根据用户的需求，动态展示结果，还可以实现多功能
+    地址中的？对搜索引擎存在一些问题。
+    （当浏览器请求服务器的某个页面时，服务器根据一些信息，动态的生成一个html页面，发送给浏览器）
+    此“动态”是指服务器端页面的动态生成，而“静态”则是实实在在的存在
+五、servlet技术
+  1、简介
+      就是一段运行在服务端的一段java代码
+      1.接收处理用户的请求
+      2.调用相应的java程序来完成请求的处理
+      3.响应
+  2.手动开发一个servlet程序
+      步骤：
+        1.先书写servlet的实现类，覆盖其方法（主要是service方法）
+        2.编译该文件，将文件放入myweb/WEB-INF/classes文件
+        3.配置web.xml文件
+        具体如下
+  <display-name>myservlet</display-name>
+  <servlet>
+  	<servlet-name>**name**</servlet-name>
+  	<servlet-class>**包名.类名***</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>na（与上相同）</servlet-name>
+  	<url-pattern>/真正在url里调用的名字</url-pattern>
+  </servlet-mapping>
+       4.开启服务器
+       5.发起访问
+   3.使用myeclipse集成tomcat
+      1.新建Web Project（不要直接finish）
+      2.写servlet的实现类
+      3.配置web.xml文件
+      4.将项目部署到服务器上
+      5.开启服务器
+      6.发起访问
+   4.客户端请求一个servlet1的简单流程
+      http://ip:port/项目名/url-pattern
+      通过浏览器向服务器request
+      服务器收到之后，解析给出的路径  1.先找项目名，进入项目
+                                   2.再进入WEB-INF里的web.xml
+                                   3.找到url-pattern
+                                   4.然后找到<servlet-mapping>里的<servlet-name>的名字，再映射进入<servlet>中的相同的-name,再找到-class里的java文件
+                                   5.java文件编译生成的.class文件会部署到项目中的classes文件夹里
+                                   6.classes里有很多字节码文件，具体用哪个要根据之间的解析
+                                   7.字节码文件作用是向外输出一共html网页，输出就是响应。
+                                   结束
+
+六、实现servlet的几种方式
+  1.implements Servlet (javax.servlet包中的接口)
+    需要覆盖5个方法
+    与http协议无关
+  2.extends GenericServlet（是javax.servlet包中的抽象类）
+  实现servlet接口，覆盖了除servlet以外的其他方法
+  与http协议无关
+  3.extends HttpServlet(是javax.servlet包中的类)
+    是GenericServlet的子类
+    自定义的类只需要覆盖HttpServlet类内部的service(HttpServletRequest request,HttpServletResponse response)---与Http协议相关 
+    HttpServletRequest 是 ServletRequest的子类 
+    HttpServletResponse 是 ServletResponse的子类
+
+
+
+
+
+
+
+            
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
