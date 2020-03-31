@@ -1,0 +1,4 @@
+一、基础知识
+  JDBC全称java date base connectivity  他是执行SQL语句的java API
+  java API 是sun公司定义的一种链接数据库的接口，他使我们java程序员不用去学习各种不同的数据库API，只需要使用数据库厂商提供的数据库驱动程序即可
+  
